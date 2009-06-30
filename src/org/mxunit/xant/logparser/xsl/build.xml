@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="xslt" default="main">
+	
+    <target name="main">
+    <echo>main</echo>
+    	<xslt destdir="out"
+    		  in="frantic-request.xml"
+    		  out="frantic-out.html"
+    		  style="frantic-request.xsl"
+    	      >
+
+    	</xslt>
+    </target>
+
+
+</project>

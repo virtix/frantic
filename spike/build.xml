@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Apr 13, 2008 10:05:37 PM                                                        
+
+     xant    
+     Library of Ant tasks:
+     	*MS Log Parser 
+     	  - FR Log Reporter
+     	  - CF Log Reporter
+     	  - IIS Log Reporter
+     	 * CF HttpClient <param scope="application" name="foo">value ...</param> 
+                   
+     bill|y                                                                
+     ====================================================================== -->
+<project name="xant" default="frantic">
+    <description>
+     Playing with the xant library
+    </description>
+
+	<property file="../buildprops/build.properties" />
+  
+	
+	
+    <target name="frantic">
+       <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../xant.jar"   />
+  
+        
+        <frantic logparser="${log.parser}" 
+            	 logdir="../tests/fixture/" 
+            	 format="html"
+            	 maxrows="500" 
+            	 id="my-frantic-tests" 
+            	 type="request" outputdir="out"
+        		 title="FR Request Error Report"
+        		 filter="statuscode > 400" 
+        		/>
+
+        <frantic logparser="${log.parser}" 
+            	 logdir="../tests/fixture/" 
+            	 format="html"
+            	 maxrows="500" 
+            	 id="my-frantic-tests" 
+            	 type="jdbc" outputdir="out"
+        		 title="FR JDBC Report"
+        		  />
+
+        <frantic logparser="${log.parser}" 
+                 logdir="../tests/fixture/" 
+            	 outputdir="out"
+               	 format="html"
+               	 maxrows="500" 
+               	 id="my-frantic-tests" 
+               	 columnList="date,time,version,cptype,action,mempctcp,memthreshold,requestcount,requestthreshold,exectimecp,execthreshold,reqmethod,requrl"
+                 type="crash" 
+           		 title="FR Crash Report"
+            	 filter="exectimecp > '30000'"
+           		  />
+    
+    </target> 
+    
+    
+    <target name="frantic-csv">
+           <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../xant.jar"   />
+      
+            
+            <frantic logparser="${log.parser}" 
+                	 logdir="../tests/fixture/"
+                	 format="csv"
+                	 />
+
+            
+        </target> 
+        
+    
+    <target name="frantic-slow">
+    
+        <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../xant.jar" />
+        <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+                        logdir="../tests/fixture/"
+                        format="html"
+                        maxrows="500"
+                        id="my-frantic-requests"
+                        type="request" outputdir="out"
+                        title="FR Request Error Report"
+                        filter="statuscode > 400" />
+
+               <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+                        logdir="../tests/fixture/"
+                        format="html"
+                        maxrows="1000"
+                        id="my-frantic-jdbc-hogs"
+                        type="jdbc" outputdir="out"
+                        title="FR JDBC Hogs"
+                        filter="totaltime > 1000"
+               			sort="totaltime,date,time"/>
+        
+        </target> 
+        
+
+</project>

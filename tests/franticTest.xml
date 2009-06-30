@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+ <project xmlns:au="antlib:org.apache.ant.antunit"
+          xmlns="antlib:org.apache.tools.ant" >
+
+
+    <target name="testThatFranticWritesValidXmlFiles">
+        <frantic logparser="${log.parser}" logdir="fixture/" format="xml"
+                  maxrows="1" type="all" outputdir="out"/>
+
+  
+          
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - -
+          target: testThatFranticWrites5CsvFiles
+         - - - - - - - - - - - - - - - - - -->
+    <target name="testThatFranticWrites5CsvFiles">
+      <frantic logparser="${log.parser}" logdir="fixture/" format="csv"
+                maxrows="1" type="all" outputdir="out"/>
+      
+    </target>
+
+
+ <target name="setUp">
+  <!-- for log assertions -->
+  <au:logcontent level="verbose" />
+  <property file="../buildprops/build.properties" />
+  <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../xant.jar"   />
+
+ </target>
+
+
+  <!-- clean up -->
+  <target name="tearDown">
+  <delete>
+    <fileset dir="out">
+      <include name="frantic-*.xml"/>
+      <include name="frantic-*.csv"/>
+    </fileset>
+  </delete>
+
+  </target>
+
+
+</project>

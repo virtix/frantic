@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+ <project xmlns:au="antlib:org.apache.ant.antunit"
+          xmlns="antlib:org.apache.tools.ant" >
+
+
+ <target name="testExecuteLogParser">
+  <xant logparser="${log.parser}" />
+   <au:assertLogContains text="Hello, FusionReactorLogParser" message="Log should say Hello, FusionReactorLogParser"  />   
+ </target>
+ 	
+ 	
+ <target name="testThatAllAttributesSetDontBreakLogParser">
+    <xant logparser="${log.parser}"
+          maxrows="10" 
+ 	      type="request" 
+ 	      logdir="path/to/logs"  /> 
+ </target>
+     
+     
+	
+<!--
+ 	<target name="testLogParserAttribute">
+ 	 <au:expectfailure expectedMessage="logParser attribute must be set to the path to your executable!">
+ 	   <xant logparser="foo" />
+ 	 </au:expectfailure>
+ 	</target>
+ 	
+
+
+
+
+  <target name="testDir">   
+    <au:assertLogContains message="Log contains this string when task executes successfully" text="Fare thee well, human." />
+    <au:assertFileExists file="results/au.test.properties" message="Missing properties results file"/>
+    <au:assertPropertySet name="total.runs" message="total.runs not set"/>
+    <au:assertEquals expected="8" actual="${total.runs}" message="Should be a total of 8 runs" />
+    <au:assertPropertyEquals value="8" name="total.runs" message="Should be a total of 8 runs" />
+    <au:assertPropertyEquals value=".75" name="success.ratio" message="Should be a total of 75%" />
+  </target>
+
+-->
+
+
+ <target name="setUp">
+   <!-- for log assertions -->
+  <au:logcontent level="verbose" />
+  <property file="../buildprops/build.properties" />
+  <taskdef name="xant" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../xant.jar"   />
+ 	  
+ </target>
+
+
+  <!-- clean up -->
+  <target name="tearDown">
+     <!-- clean up -->
+  	
+  </target>
+
+
+</project>

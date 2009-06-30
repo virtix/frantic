@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Apr 13, 2008 10:05:37 PM                                                        
+
+     xant    
+     Library of Ant tasks:
+     	*MS Log Parser 
+     	  - FR Log Reporter
+     	  - CF Log Reporter
+     	  - IIS Log Reporter
+     	 * CF HttpClient <param scope="application" name="foo">value ...</param> 
+                   
+     bill|y                                                                
+     ====================================================================== -->
+<project name="xant" default="main">
+    <description>
+     Builds the xant library
+    </description>
+
+	<property file="buildprops/build.properties" />
+  
+	
+  <target name="init">
+  	  <echo>init</echo>
+      <echoproperties />
+      <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar"   />
+  </target>
+	
+    <!-- ================================= 
+          target: main              
+         ================================= -->
+    <target name="main" depends="compile,jar,vi,test" description="--> description">
+       
+    
+    </target>
+
+	<target name="compile" description="Compiles the Task" >
+	  <mkdir dir="bin"/>
+	  <javac verbose="true" compiler="jikes" srcdir="src" destdir="bin" />
+	</target>
+
+	<target name="jar" description="JARs the Task" depends="compile">
+	  <jar destfile="xant.jar" basedir="bin">
+	  <!-- <fileset dir="${httpclient.dir}/httpclient" /> -->
+	  </jar>
+	</target>
+	
+    <target name="test">
+	  <ant dir="tests" />
+	</target>
+    
+    <target name="vi">
+      <echo level="info">Running VI</echo>
+      <taskdef name="xant" classname="org.mxunit.xant.logparser.MSLogParser" classpath="xant.jar"   />
+      <property name="dest" value="testfluke.csv" />
+      <xant logparser="${log.parser}" output="csv">
+    	<sql>
+    	 select top 10 * into testfluke.csv 
+    	 from tests/fixture/application.log
+    	</sql>
+      </xant>
+        
+      <xant logparser="${log.parser}" output="xml">
+      	<sql>
+      	  select top 10 * into test.xml 
+      	  from tests/fixture/application.log
+      	 </sql>
+       </xant>  
+        
+       <xant logparser="${log.parser}">
+     	<sql>
+     	  select top 10 * from tests/fixture/application.log
+     	 </sql>    
+        </xant>  
+        
+      <!-- why does this work here and not in antunit? 
+        <xant logparser="${log.parser}" 
+              file="tests/fixture/cp.sql" 
+              output="csv"
+              input="TSV"
+              headerfile="tests/fixture/request-headers.txt"
+              separator="space" />  
+              -->
+        
+    </target>
+	
+	
+    <target name="frantic" depends="compile,jar">
+       <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar"   />
+       <property name="dest" value="testfluke.csv" />     
+        
+        <frantic logparser="${log.parser}" logdir="tests/fixture/" format="html"
+            	 maxrows="50" id="testtesttest" type="request" outputdir="frantic"
+        		 title="Some Rad Cool Report"/>
+        
+    	<frantic logparser="${log.parser}" logdir="tests/fixture/" format="xml"
+        	          maxrows="1" type="request" outputdir="frantic"/>
+        	
+        	<frantic logparser="${log.parser}" logdir="tests/fixture/" format="xml"
+        	         maxrows="10" outputdir="frantic"/>
+      
+    	<frantic logparser="${log.parser}" logdir="tests/fixture/" format="csv"
+    	         maxrows="10" outputdir="frantic"/>   
+    	
+    	<!-- should ignore all attributes other than logparser -->
+    	
+    	<frantic logparser="${log.parser}" headerFile="tests/fixture/request-headers.txt">
+    	 <sql>
+    	  select top 5 clientip 
+    	  into frantic/clientip.csv
+       	  from tests/fixture/request-0.log
+    	 </sql>
+    	</frantic>
+       </target> 
+    
+    
+    
+    
+    <target name="cf" depends="compile,jar">
+    	 <echo level="info">CF</echo>
+        <taskdef name="cfant" classname="org.mxunit.xant.logparser.CFLogParser" classpath="xant.jar"   />
+        <property name="dest" value="testfluke.csv" />
+        
+        <cfant logparser="${log.parser}" filemode="1">
+            <sql>
+             select top 10 * 
+             from tests/fixture/application.log
+            </sql>
+                
+             <sql>
+             select top 10 * 
+             from tests/fixture/exception.log
+             </sql>    
+            
+             <sql>
+             select top 10 * 
+             from tests/fixture/mxunit.log
+             </sql> 
+        </cfant>
+           
+                 
+       </target>
+
+</project>

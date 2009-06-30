@@ -1,0 +1,59 @@
+C:\Documents and Settings\Billy\workspace\xant>logparser -h -o:xml
+
+Output format: XML (XML Output Format)
+Writes output to an XML file
+
+INTO syntax:
+
+ <filename> | STDOUT | <empty>
+ If empty, will use STDOUT. Specifying '*' wildcards in the path enables
+ "Multiplex mode", where results are written to different files whose
+ names
+ are created substituting the wildcards with the first values in the
+ SELECT
+ statement
+
+Parameters:
+
+ -structure    1|2|3|4             : Type of XML structure [default
+ value=1]
+ -rootName     <element name>      : Name of the ROOT element [default
+                                     value=ROOT]
+ -rowName      <element name>      : Name of the ROW element [default
+                                     value=ROW]
+ -fieldName    <element name>      : Name of the FIELD element [default
+                                     value=FIELD]
+ -xslLink      <xsl document path> : Path of an XSL document to be
+ referenced
+                                     in the output [default value=not
+                                     specified]
+ -schemaType   0|1                 : Type of schema to be written inline
+                                     (0=none, 1=DTD) [default value=1]
+ -compact      ON|OFF              : Suppress spaces and carriage
+ returns in
+                                     output [default value=OFF]
+ -noEmptyField ON|OFF              : Suppress empty tags for NULL field
+                                     values [default value=OFF]
+ -standAlone   ON|OFF              : When OFF, does not write any <XML>
+                                     header nor <ROOT> tags (generates
+                                     an
+                                     invalid XML document) [default
+                                     value=ON]
+ -oCodepage    <codepage ID>       : Output codepage (0=system codepage,
+                                     -1=UNICODE) [default value=-1]
+ -fileMode     0|1|2               : Action to perform when output file
+                                     already exists (0=append, 1=
+                                     overwrite,
+                                     2=ignore) [default value=1]
+Examples:
+
+ Create an XML report file containing logon account names and dates from
+ the
+  Security Event Log messages:
+
+     LogParser "SELECT TimeGenerated AS LogonDate,
+     EXTRACT_TOKEN(Strings, 0,
+     '|') AS Account INTO Report.xml FROM Security WHERE EventID NOT IN
+     (541;542;543) AND EventType = 8 AND EventCategory = 2"
+
+

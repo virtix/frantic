@@ -1,0 +1,261 @@
+<!--
+
+-->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="style.css">
+<title>[xant] Frantic - FusionReactor Log Parser</title>
+</head>
+
+<body>
+
+<h2><a name="zip">Frantic</a> - Version: 0.9.01</h2>
+<h3>Description</h3>
+<p>Wraps MS LogParser in an Ant Task and provides specific
+<a href="http://www.fusion-reactor.com/">FusionReactor</a> log parsing and reporting
+capabilities.
+</p>
+
+<p>
+Supported output formats include XML,HTML, and CSV.
+</p>
+
+
+
+<p>
+ <strong>Example usage:</strong>
+<xmp>
+<taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar" />
+ <frantic logparser="C:/Program Files/LogParser2.2/LogParser.exe"
+          logdir="/path/to/fr/logs/"
+          outputdir="out"
+          format="html"
+          maxrows="500"
+          id="my-frantic-tests"
+          columnList="date,time,cptype,action,mempctcp,requestcount,requestthreshold,exectimecp,reqmethod,requrl"
+          type="crash"
+          title="FR Crash Report"
+          filter="exectimecp > '30000'"
+        />
+</xmp>
+</p>
+
+
+
+<p>
+
+</p>
+
+
+<h3>Dependencies</h3>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07&displaylang=en">Microsoft Log Parser 2.2</a></li>
+The path to the LogParser executable must be provided.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
+    <td valign="top" align="center"><b>Default</b></td>
+  </tr>
+  <tr>
+    <td valign="top">logparser</td>
+    <td valign="top">Full path to the LogParser executable</td>
+    <td align="center" valign="top">Yes</td>
+    <td valign="top" align="center">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td valign="top">logdir</td>
+    <td valign="top">Path to the directory containing FusionReactor log files</td>
+    <td align="center" valign="top">Yes</td>
+    <td valign="top" align="center">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top">outputdir</td>
+    <td valign="top">A directory in which to save results.</td>
+    <td align="center" valign="top">No</td>
+    <td valign="top" align="center">xant-temp</td>
+  </tr>
+  <tr>
+      <td valign="top">format</td>
+      <td valign="top">XML,HTML,or CSV</td>
+      <td align="center" valign="top">No<br><strong>Note</strong>
+      That by specifying HTML, XML files will also be generated and saved.
+      </td>
+      <td valign="top" align="center">HTML</td>
+  </tr>
+  <tr>
+      <td valign="top">maxrows</td>
+      <td valign="top">How many rows to process.
+      </td>
+      <td align="center" valign="top">No</td>
+      <td valign="top" align="center">1000</td>
+  </tr>
+  <tr>
+        <td valign="top">id</td>
+        <td valign="top">User-defined ID for the output results.<br />
+        Formats:<br />
+        frantic-jdbc-<em>id</em>.<em>format</em><br />
+        frantic-request-<em>id</em>.<em>format</em><br />
+        frantic-crash-<em>id</em>.<em>format</em><br />
+        frantic-resource-<em>id</em>.<em>format</em><br />
+        </td>
+        <td align="center" valign="top">No</td>
+        <td valign="top" align="center">System generated UUID</td>
+  </tr>
+
+   <tr>
+          <td valign="top">type</td>
+          <td valign="top">
+          The type of report to generate: request, crash, jdbc, resource, or all. Defaults to all.
+          </td>
+          <td align="center" valign="top">No</td>
+          <td valign="top" align="center">ALL</td>
+  </tr>
+
+  <tr>
+    <td valign="top">title</td>
+    <td valign="top">
+      The title printed in the html and xml outputs.
+    </td>
+    <td align="center" valign="top">No</td>
+    <td valign="top" align="left">FusionReactor Logfile Report</td>
+  </tr>
+  <tr>
+    <td valign="top">filter</td>
+    <td valign="top">Constraints used to control which data is processed. This is the
+    "Where" clause.
+    </td>
+    <td align="center" valign="top">No</td>
+    <td valign="top" align="center">&nbsp;</td>
+  </tr>
+
+ <tr>
+    <td valign="top">columnlist</td>
+    <td valign="top">Comma-delimited list of columns from which to select.
+    </td>
+    <td align="center" valign="top">No</td>
+    <td valign="top" align="center">*</td>
+  </tr>
+
+   <tr>
+      <td valign="top">sort</td>
+      <td valign="top">Comma-delimited list of columns by which to sort.
+      </td>
+      <td align="center" valign="top"><strong>Note:</strong> Each sorted column <u>must</u> be present in the select list.</td>
+      <td valign="top" align="center">date,time</td>
+  </tr>
+
+</table>
+
+
+<hr />
+<h3>Examples</h3>
+<p style="font-weight:bold">Generate CSVs of the most recent 1000 items in each FusionReactor LogFile into <code>xant-temp</code></p>
+
+<xmp>
+<taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar" />
+ <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+          logdir="../tests/fixture/"
+          format="csv"/>
+
+ </xmp>
+
+
+<p style="font-weight:bold">Changing the <code>format</code> attribute to html will generate the same data
+but will generate html and xml.
+</p>
+
+<xmp>
+<taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar" />
+ <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+          logdir="../tests/fixture/"
+          format="html"/>
+
+ </xmp>
+
+<p style="font-weight:bold">Print the 100 slowest requests to html.
+</p>
+
+<xmp>
+<taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar" />
+ <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+          logdir="../tests/fixture/"
+          format="html"
+          type="request"
+          maxrows="100"
+          title="Slow Request Report"
+          id="slow-stuff"
+          sort="exectime"
+          direction="desc"/>
+
+ </xmp>
+
+<h3>Complete  Example:</h3>
+
+<xmp><?xml version="1.0"?>
+<!-- ======================================================================
+     Apr 29, 2008 10:05:37 PM
+
+     xant
+     Library of Ant tasks:
+      *MS Log Parser
+        - FR Log Reporter
+        - CF Log Reporter
+        - IIS Log Reporter
+     ====================================================================== -->
+<project name="xant" default="frantic-daily">
+    <description>
+     Playing with the xant library
+    </description>
+
+    <target name="frantic-daily">
+       <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="xant.jar"   />
+
+       <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+                logdir="../tests/fixture/"
+                format="html"
+                maxrows="500"
+                id="my-frantic-requests"
+                type="request"
+                outputdir="out"
+                title="FR Request Error Report"
+                filter="statuscode > 400" />
+
+      <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+               logdir="../tests/fixture/"
+               format="html"
+               maxrows="1000"
+               id="my-frantic-jdbc-hogs"
+               type="jdbc"
+               outputdir="out"
+               title="FR JDBC Hogs"
+               filter="totaltime > 1000"
+               sort="totaltime,date,time"/>
+
+
+      <frantic logparser="C:/Program Files/Log Parser 2.2/LogParser.exe"
+               logdir="../tests/fixture/"
+               format="csv"
+               maxrows="50000"
+               id="my-frantic-dump-from-yesterday"
+               type="all"
+               outputdir="out"
+               filter="date='2008-04-28'"/>
+
+     </target>
+
+ </xmp>
+
+
+
+
+<p>&nbsp;</p>
+</body>
+</html>
+
+

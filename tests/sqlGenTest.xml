@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+ <project xmlns:au="antlib:org.apache.ant.antunit"
+          xmlns="antlib:org.apache.tools.ant" default="main">
+
+
+ 	 <target name="testSQLGen">
+ 	     <frantic logparser="${log.parser}" 
+ 	          	  logdir="fixture/" 
+ 	              maxrows="10" 
+ 	          	  type="request" 
+ 	          	  outputdir="out"
+ 	    		  format="csv" 
+ 	    		  direction="asc"
+ 	    		  filter="statuscode > 400"
+ 	 			  id="my-reports" />
+ 	
+ 	   </target>
+	
+ <target name="setUp">
+   <!-- for log assertions -->
+  <au:logcontent level="verbose" />
+ <property file="../buildprops/build.properties" />
+  <taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../xant.jar"   />
+
+ </target>
+
+
+  <!-- clean up -->
+  <target name="tearDown">
+  </target>
+
+<target name="runTarget">
+ <input message="SVN Commit Comment:" addproperty="run.target" defaultvalue="main" />
+ <echo>Running target: ${run.target}</echo>
+ <antcall target="${run.target}" />
+</target>
+     
+  <target name="main">
+  <echo level="info">Running antunit tests</echo>
+  <au:antunit>    
+    <file file="sqlGenTest.xml"/>
+    <au:plainlistener />
+  </au:antunit>
+ </target>
+ 
+      
+      
+      
+      <!--
+
+
+
+        <target name="testDir">   
+          <au:assertLogContains message="Log contains this string when task executes successfully" text="Fare thee well, human." />
+          <au:assertFileExists file="results/au.test.properties" message="Missing properties results file"/>
+          <au:assertPropertySet name="total.runs" message="total.runs not set"/>
+          <au:assertEquals expected="8" actual="${total.runs}" message="Should be a total of 8 runs" />
+          <au:assertPropertyEquals value="8" name="total.runs" message="Should be a total of 8 runs" />
+          <au:assertPropertyEquals value=".75" name="success.ratio" message="Should be a total of 75%" />
+        </target>
+
+      -->     
+     
+</project>

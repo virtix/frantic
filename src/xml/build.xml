@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<project name="xslt" default="main">
+	<description>
+	Used to develop the stylesheet for the xsl transformation
+	</description>
+    <target name="main">
+      <echo>Generating Request</echo>
+    	<xslt destdir="out"
+    		  in="data/frantic-request.xml"
+    		  out="out/frantic-request.html"
+    		  style="xsl/frantic-request.xsl">
+
+    	</xslt>
+    	
+    	<echo>Generating Crash</echo>
+        <xslt destdir="out"
+              in="data/frantic-crash.xml"
+              out="out/frantic-crash.html"
+              style="xsl/frantic-crash.xsl">
+        </xslt>
+    	
+    	<echo>Generating JDBC</echo>
+        <xslt destdir="out"
+              in="data/frantic-jdbc.xml"
+              out="out/frantic-jdbc.html"
+              style="xsl/frantic-jdbc.xsl">
+        </xslt>
+    	
+    	<echo>Generating Resource</echo>
+        <xslt destdir="out"
+              in="data/frantic-resource.xml"
+              out="out/frantic-resource.html"
+              style="xsl/frantic-resource.xsl">
+        </xslt>
+    	
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: getXmlData                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="getXmlData">
+    	<taskdef name="frantic" classname="org.mxunit.xant.logparser.FusionReactorLogParser" classpath="../../xant.jar"   />   
+    	<property name="log.parser" value="J:\\Log Parser 2.2\\LogParser.exe" />
+    	<frantic logparser="${log.parser}" logdir="../../tests/fixture/" format="xml"
+    	          maxrows="1000" type="all" outputdir="data"/>
+    </target>
+
+	
+
+</project>

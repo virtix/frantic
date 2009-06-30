@@ -1,0 +1,50 @@
+
+Input format: XML (XML Format)
+Parses XML files
+
+FROM syntax:
+
+ <document>[#<XPath>] [, ...]
+ <document> = <filename> | <url>
+ Comma-separated list of filenames (eventually containing wildcards) or
+ URL's, each optionally followed by an XPath
+
+Parameters:
+
+ -rootXPath <XPath>                : XPath query of nodes to be considered
+                                     roots (if not specified in from-entity)
+                                     [default value=not specified]
+ -fMode     Branch|Tree|Node|Auto  : Field mode; Branch: each record contains
+                                     all of the element and attribute nodes
+                                     found in the path from the root(s) to an
+                                     individual leaf node; Tree: each record
+                                     contains all of the element and
+                                     attribute nodes found in each subtree
+                                     from the root(s) that includes distinct
+                                     child nodes; Node: each record is a
+                                     single root, and only its value and
+                                     attributes are returned; Auto: select
+                                     best mode after analyzing schema
+                                     [default value=Auto]
+ -iTsFormat <timestamp format>     : Format of TIMESTAMP fields [default
+                                     value=yyyy-MM-dd?hh:mm:ss]
+ -dtNodes   <number of leaf nodes> : Parse this amount of leaf nodes to
+                                     detect schema at runtime; -1 = parse
+                                     whole document [default value=-1]
+ -fNames    Compact|XPath          : Field names; Compact: each field name is
+                                     the element\attribute name; XPath: each
+                                     field name is the XPath query for the
+                                     field [default value=Compact]
+
+Fields:
+
+ Field names and types are retrieved at runtime from the specified input file(s) 
+
+Examples:
+
+ Display titles of current channels on MSDN BLogs:
+
+     LogParser "SELECT title INTO MyOutput.txt FROM http://blogs.msdn.com/Mai
+     nFeed.aspx#/rss/channel/item" -i:XML -fMode:Tree -o:tpl
+     -tpl:mytemplate.tpl
+

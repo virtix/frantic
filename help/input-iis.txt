@@ -1,0 +1,35 @@
+
+Input format: IIS (Microsoft IIS Log Format)
+Parses Microsoft IIS log files
+
+FROM syntax:
+
+ <filename> | <SiteID> [, <filename> | <SiteID> ... ]
+ <SiteID> = '<' SiteID '>'
+ SiteID can be a SiteID number, a fully qualified ADSI Path (e.g.
+ "//GABRIEGI1/W3SVC/1"), or a Site name (e.g. "My External Site"), eventually
+ containing wildcards
+
+Parameters:
+
+ -locale      <locale name>     : 3-letter ID of the log file locale [default
+                                  value=DEF]
+ -iCodepage   <codepage ID>     : Input codepage (-2=guess from filename
+                                  and/or LogInUTF8 property) [default
+                                  value=guess from filename and/or LogInUTF8
+                                  property]
+ -recurse     <level>           : Max subdirectory recursion level (0=no
+                                  recurse, -1=all levels) [default value=0]
+ -minDateMod  <date>            : Minimum file last modified date [default
+                                  value=not specified]
+ -iCheckpoint <checkpoint file> : Save checkpoint information to this file
+                                  [default value=no checkpoint]
+
+Fields:
+
+  LogFilename (S) LogRow (I)          UserIP (S)          UserName (S)     
+  Date (T)        Time (T)            ServiceInstance (S) HostName (S)     
+  ServerIP (S)    TimeTaken (I)       BytesSent (I)       BytesReceived (I)
+  StatusCode (I)  Win32StatusCode (I) RequestType (S)     Target (S)       
+  Parameters (S)  
+

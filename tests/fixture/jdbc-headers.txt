@@ -1,0 +1,1 @@
+date time datetimemms version reqid threadid clientip reqmethod requrl logtype dbtimefrom dbtimeto totaltimeto dbtime totaltime rowcount prepstmt rowlimited datasource stmt stacktrace querystring message

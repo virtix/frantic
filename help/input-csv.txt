@@ -1,0 +1,50 @@
+
+Input format: CSV (CSV Format)
+Parses text files containing comma-separated values
+
+FROM syntax:
+
+ <filename> [, <filename> ...] |
+ http://<url> |
+ STDIN
+ Path(s) to CSV file(s)
+
+Parameters:
+
+ -headerRow   ON|OFF             : Treat first row of each file as a header
+                                   (containing field names) [default
+                                   value=ON]
+ -iHeaderFile <header file path> : File containing header (overrides
+                                   individual files' header definitions)
+                                   [default value=not specified]
+ -iDQuotes    Auto|Ignore        : Behavior with double-quoted fields;
+                                   Auto:automatically detect double-quoted
+                                   fields; Ignore:leave double quotes in
+                                   fields [default value=Auto]
+ -fixedFields ON|OFF             : Fixed number of fields in the log [default
+                                   value=ON]
+ -nFields     <number of fields> : Number of fields in the log (-1=detect at
+                                   runtime) [default value=-1]
+ -dtLines     <number of lines>  : Read this amount of lines to detect field
+                                   types at runtime [default value=10]
+ -nSkipLines  <number of lines>  : Number of initial lines to skip [default
+                                   value=0]
+ -comment     <any string>       : String prefix of comment lines to be
+                                   skipped [default value=not specified]
+ -iCodepage   <codepage ID>      : Input codepage (0=system codepage,
+                                   -1=UNICODE) [default value=0]
+ -iTsFormat   <timestamp format> : Format of TIMESTAMP fields [default
+                                   value=yyyy-MM-dd hh:mm:ss]
+ -iCheckpoint <checkpoint file>  : Save checkpoint information to this file
+                                   [default value=no checkpoint]
+
+Fields:
+
+ Field names and types are retrieved at runtime from the specified input file(s) 
+
+Examples:
+
+ List the fields extracted from a CSV file:
+
+     LogParser -h -i:CSV myfile.csv -headerRow:on
+

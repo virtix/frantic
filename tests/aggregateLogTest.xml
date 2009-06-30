@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+ <project xmlns:au="antlib:org.apache.ant.antunit"
+          xmlns="antlib:org.apache.tools.ant" >
+
+
+ <target name="testThatMultipleSQLsAppendEachOtherAndMakeCustomLogWithHeadersTurnedOff">
+       <xant logparser="${log.parser}" output="csv" 
+             input="csv" 
+       	     filemode="0" headers="off">
+        <sql>
+          select top 10 * into out/custom-log.log from fixture/application.log
+         </sql>
+       <sql>
+	     select top 10 * into out/custom-log.log from fixture/mxunit.log
+	   </sql>
+	 </xant>
+	
+        <au:assertFileExists file="out/custom-log.log" message="Missing log file"/>
+     </target>
+
+	
+  <target name="testThatMultipleSQLsAppendEachOtherAndMakeCustomLogWithHeadersTurnedOn">
+      <xant logparser="${log.parser}" output="csv" 
+             input="csv" 
+             filemode="0" headers="on">
+        <sql>
+           select top 10 * into out/custom-log-hon.log from fixture/application.log
+          </sql>
+        <sql>
+          select top 10 * into out/custom-log-hon.log from fixture/mxunit.log
+          </sql>
+        </xant>
+         <au:assertFileExists file="out/custom-log-hon.log" message="Missing log file"/>
+   </target>
+
+   <target name="testThatCSVGetsQuoted">
+    <xant logparser="${log.parser}" 
+           output="csv" 
+           input="csv" 
+           filemode="0" headers="off" quotes="on">
+      <sql>
+         select top 10 * into out/custom-log-q.log from fixture/application.log
+        </sql>
+      <sql>
+        select top 10 * into out/custom-log-q.log from fixture/mxunit.log
+        </sql>
+      </xant>
+       <au:assertFileExists file="out/custom-log-q.log" message="Missing log file"/>
+ </target>
+   <target name="testThatCSVGetsODQuoted">
+ 	 <xant logparser="${log.parser}" 
+ 	        output="csv" 
+ 		    input="csv" 
+ 		    filemode="0" headers="off" quotes="on">
+ 		    <sql>
+ 	          select top 10 * into  out/custom-log-q.log from fixture/application.log
+ 		    </sql>
+ 		     <sql>
+ 		      select top 10 * into  out/custom-log-q.log from fixture/mxunit.log
+ 		     </sql>
+ 		     </xant>
+ 		    <au:assertFileExists file="out/custom-log-q.log" message="Missing log file"/>
+ 	 </target>		            	
+ 		            	
+ 		            	
+ <target name="setUp">
+   <!-- for log assertions -->
+  <au:logcontent level="verbose" />
+ <property file="../buildprops/build.properties" />
+  <taskdef name="xant" classname="org.mxunit.xant.logparser.MSLogParser" classpath="../xant.jar"   />
+
+ </target>
+
+
+  <!-- clean up -->
+  <target name="tearDown">
+   <delete>
+  	 <fileset dir="out">
+      <include name="custom-*.log"/>
+     </fileset>
+   </delete>
+  </target>
+
+
+</project>

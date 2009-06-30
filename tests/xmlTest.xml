@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+
+ <project xmlns:au="antlib:org.apache.ant.antunit"
+          xmlns="antlib:org.apache.tools.ant" >
+
+
+ 	<target name="testThatMultipleSQLsAppendEachOther">
+ 	       <xant logparser="${log.parser}" output="xml" 
+ 	             input="csv" 
+ 	       	     rootname="cfapplog" 
+ 	       	     rowname="cfentry" 
+ 	       	     compact="ON" filemode="0" schemaType="0">
+ 	        <sql>
+ 	          select top 10 * into out/AppendLog.xml from fixture/application.log
+ 	         </sql>
+ 	       <sql>
+ 		     select top 10 * into out/AppendLog.xml from fixture/mxunit.log
+ 		   </sql>
+ 		 </xant>
+ 		
+ 		<!-- 
+ 		 Note that although this files gets appended, it is not 
+ 		 well-formed as LP writes all xml data to the end of the
+ 		 file as opposed insterting it. This might be useful for
+ 		 generating custom log files.
+ 		-->
+ 		
+ 	        <au:assertFileExists file="out/AppendLog.xml" message="Missing XML file"/>
+ 	     </target>
+ 	
+ 	
+   <target name="testXMLDetailedOutputShouldHaveFieldNamesForRows">
+       <xant logparser="${log.parser}" output="xml" input="csv" rootname="cfapplog" rowname="cfentry" compact="ON">
+        <sql>
+          select top 10 * into out/CFAppLog.xml from fixture/application.log
+         </sql>
+        </xant>
+        <au:assertFileExists file="out/CFAppLog.xml" message="Missing XML file"/>
+     </target>
+     
+     <target name="testXMLWithStructureOption1">
+             <xant logparser="${log.parser}" output="xml" structure="1">
+                  <sql>
+                    select top 10 * into out/test-opt1.xml from fixture/application.log
+                   </sql>
+                  </xant>
+                  <au:assertFileExists file="out/test-opt1.xml" message="Missing XML file"/>
+         </target>
+     
+     <target name="testXMLWithStructureOption2">
+       <xant logparser="${log.parser}" output="xml" structure="2">
+            <sql>
+              select top 10 * into out/test-opt2.xml from fixture/application.log
+             </sql>
+            </xant>
+            <au:assertFileExists file="out/test-opt2.xml" message="Missing XML file"/>
+         </target>
+     
+     <target name="testXMLWithStructureOption3">
+         <xant logparser="${log.parser}" output="xml" structure="3">
+           <sql>
+              select top 10 * into out/test-opt3.xml from fixture/application.log
+             </sql>
+            </xant>
+            <au:assertFileExists file="out/test-opt3.xml" message="Missing XML file"/>
+       </target>
+                   
+       <target name="testXMLWithStructureOption4">
+         <xant logparser="${log.parser}" output="xml" structure="4">
+              <sql>
+                select top 10 * into out/test-opt4.xml from fixture/application.log
+               </sql>
+          </xant>
+        <au:assertFileExists file="out/test-opt4.xml" message="Missing XML file"/>
+      </target>
+
+     <target name="testXMLSetRootNameToFoo">
+         <xant logparser="${log.parser}" output="xml" rootname="foo">
+              <sql>
+                select top 10 * into out/test-root-name.xml from fixture/application.log
+               </sql>
+          </xant>
+        <!-- read in xml and test root ... todo -->
+        <au:assertFileExists file="out/test-root-name.xml" message="Missing XML file"/>
+      </target>
+
+  <target name="testXMLSetRowNameToBar">
+         <xant logparser="${log.parser}" output="xml" rowname="bar">
+              <sql>
+                select top 10 * into out/test-row-name.xml from fixture/application.log
+               </sql>
+          </xant>
+        <!-- read in xml and test root ... todo -->
+        <au:assertFileExists file="out/test-row-name.xml" message="Missing XML file"/>
+      </target>
+
+    <target name="testXMLSetFieldNameToBu">
+         <xant logparser="${log.parser}" output="xml" fieldname="fu">
+              <sql>
+                select top 10 * into out/test-field-name.xml from fixture/application.log
+               </sql>
+          </xant>
+        <!-- read in xml and test root ... todo -->
+        <au:assertFileExists file="out/test-field-name.xml" message="Missing XML file"/>
+      </target>
+
+<!--
+
+
+
+  <target name="testDir">   
+    <au:assertLogContains message="Log contains this string when task executes successfully" text="Fare thee well, human." />
+    <au:assertFileExists file="results/au.test.properties" message="Missing properties results file"/>
+    <au:assertPropertySet name="total.runs" message="total.runs not set"/>
+    <au:assertEquals expected="8" actual="${total.runs}" message="Should be a total of 8 runs" />
+    <au:assertPropertyEquals value="8" name="total.runs" message="Should be a total of 8 runs" />
+    <au:assertPropertyEquals value=".75" name="success.ratio" message="Should be a total of 75%" />
+  </target>
+
+-->
+
+
+ <target name="setUp">
+   <!-- for log assertions -->
+  <au:logcontent level="verbose" />
+ <property file="../buildprops/build.properties" />
+  <taskdef name="xant" classname="org.mxunit.xant.logparser.MSLogParser" classpath="../xant.jar"   />
+
+ </target>
+
+
+  <!-- clean up -->
+  <target name="tearDown">
+     <!-- clean up --> 
+  	  <delete>
+  	     <fileset dir="out">
+  	      <include name="*.xml"/>
+  	     </fileset>
+  	   </delete>
+   
+  </target>
+
+
+</project>
